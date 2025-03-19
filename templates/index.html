@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fishify - Fishing Gear Rental</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        header {
+            background: #0077b6;
+            color: white;
+            padding: 20px;
+            font-size: 1.5rem;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: white;
+            font-size: 1rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #0077b6;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #005f8a;
+        }
+        .listing {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Fishify - Fishing Gear Rental
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#listings">Listings</a>
+            <a href="#add-listing">Add Listing</a>
+        </nav>
+    </header>
+
+    <section id="home" class="container">
+        <h2>Find Fishing Gear for Rent</h2>
+        <input type="text" id="search" placeholder="Search for gear...">
+        <button onclick="searchListings()">Search</button>
+    </section>
+
+    <section id="listings" class="container">
+        <h2>Available Listings</h2>
+        <div id="listings-container"></div>
+    </section>
+
+    <section id="add-listing" class="container">
+        <h2>List Your Fishing Gear</h2>
+        <input type="text" id="gear-name" placeholder="Gear Name">
+        <input type="text" id="location" placeholder="Location">
+        <input type="number" id="price" placeholder="Price per Day (₹)">
+        <button onclick="addListing()">Submit</button>
+    </section>
+
+    <script>
+        let listings = [
+            { name: "Fishing Rod - Shimano", location: "Kerala", price: 200 },
+            { name: "Fishing Reel - Daiwa", location: "Bangalore", price: 150 }
+        ];
+
+        function displayListings() {
+            let container = document.getElementById("listings-container");
+            container.innerHTML = "";
+            listings.forEach((listing, index) => {
+                container.innerHTML += `
+                    <div class="listing">
+                        <h3>${listing.name}</h3>
+                        <p>Location: ${listing.location}</p>
+                        <p>Price: ₹${listing.price}/day</p>
+                        <button onclick="rent(${index})">Rent Now</button>
+                    </div>`;
+            });
+        }
+
+        function addListing() {
+            let name = document.getElementById("gear-name").value;
+            let location = document.getElementById("location").value;
+            let price = document.getElementById("price").value;
+
+            if (name && location && price) {
+                listings.push({ name, location, price });
+                displayListings();
+                alert("Listing added successfully!");
+            } else {
+                alert("Please fill all fields!");
+            }
+        }
+
+        function searchListings() {
+            let query = document.getElementById("search").value.toLowerCase();
+            let filteredListings = listings.filter(l => l.name.toLowerCase().includes(query));
+            let container = document.getElementById("listings-container");
+            container.innerHTML = "";
+            
+            if (filteredListings.length > 0) {
+                filteredListings.forEach((listing, index) => {
+                    container.innerHTML += `
+                        <div class="listing">
+                            <h3>${listing.name}</h3>
+                            <p>Location: ${listing.location}</p>
+                            <p>Price: ₹${listing.price}/day</p>
+                            <button onclick="rent(${index})">Rent Now</button>
+                        </div>`;
+                });
+            } else {
+                container.innerHTML = "<p>No listings found.</p>";
+            }
+        }
+
+        function rent(index) {
+            alert(`You have rented: ${listings[index].name}`);
+        }
+
+        displayListings();
+    </script>
+</body>
+</html>

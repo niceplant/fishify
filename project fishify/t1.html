@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fishify - Rent Fishing Gear in  Kerala</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles (Shared) */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar - Same as main page */
+        nav {
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            width: 90%;
+            max-width: 960px;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        nav ul li a.active {
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Glassmorphism Container */
+        .container {
+            max-width: 960px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            width: 90%;
+            margin: 0 auto;
+            min-height: 80vh;
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.8em;
+            animation: float 3s ease-in-out infinite;
+            text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .tagline {
+            color: #f1f1f1;
+            font-style: italic;
+            font-size: 1.2em;
+        }
+
+        /* Listings Grid */
+        #listings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        /* Listing Cards */
+        .listing-item {
+            border-radius: 12px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .listing-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Listing Image */
+        .item-image {
+            width: 100%;
+            height: 200px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Listing Text */
+        .listing-item h3 {
+            color: #333;
+            font-size: 1.5em;
+            margin-top: 15px;
+        }
+
+        .location {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #ff4b2b;
+            font-size: 1.2em;
+        }
+
+        /* Rent Now Button */
+        .rent-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .rent-button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Huge Bubbles */
+        .bubble {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: bubble-float 12s linear infinite;
+            filter: blur(2px);
+        }
+
+        @keyframes bubble-float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) translateX(calc(random(100) - 50vw));
+                opacity: 0;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                width: 95%;
+            }
+            nav {
+                width: 95%;
+            }
+            nav ul {
+                flex-direction: column;
+            }
+            nav ul li {
+                margin: 10px 0;
+            }
+            .listing-item h3 {
+                font-size: 1.3em;
+            }
+            .item-image {
+                height: 180px;
+            }
+        }
+
+        /* Specific Styles for Gear Viewing */
+        .gear-info {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .gear-info h3 {
+            color: #337ab7;
+            margin-bottom: 10px;
+            font-size: 1.6em;
+        }
+
+        .gear-info p {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .gear-details {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .gear-details h4 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .gear-feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .gear-feature-list li {
+            margin-bottom: 5px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .gear-feature-list li::before {
+            content: "\2022"; /* Bullet point */
+            position: absolute;
+            left: 0;
+            color: #007bff;
+        }
+
+        .availability {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .unavailable {
+            color: #dc3545;
+        }
+
+        .call-to-action {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .call-to-action button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4);
+        }
+
+        .call-to-action button:hover {
+            background-color: #218838;
+            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="t1.html" class="active">View Gear</a></li>
+            <li><a href=" for renters.html">For Renters</a></li>
+            <li><a href="b.html">Become a Partner</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-fish"></i> Rent Fishing Gear in  Kerala</h1>
+            <p class="tagline">Your Gateway to Fishing Adventures in God's Own Country!</p>
+        </header>
+
+        <div id="listings">
+            <div class="listing-item">
+                <div class="item-image">
+                    <img src="fr.png" alt="Premium Fishing Rod">
+                </div>
+                <h3>Premium Fishing Rod</h3>
+                <p class="location"><i class="fas fa-map-marker-alt"></i> Kerala, India</p>
+                <p class="price">₹50 / day</p>
+                <button class="rent-button">Rent Now</button>
+            </div>
+            <div class="listing-item">
+                <div class="item-image">
+                    <img src="fr2.png" alt="High-Quality Fishing Reel">
+                </div>
+                <h3>High-Quality Fishing Reel</h3>
+                <p class="location"><i class="fas fa-map-marker-alt"></i>  Kerala, India</p>
+                <p class="price">₹30 / day</p>
+                <button class="rent-button">Rent Now</button>
+            </div>
+            <div class="listing-item">
+                <div class="item-image">
+                    <img src="fr3.png" alt="Fishing Tackle Box">
+                </div>
+                <h3>Fishing Tackle Box</h3>
+                <p class="location"><i class="fas fa-map-marker-alt"></i> Kerala, India</p>
+                <p class="price">₹20 / day</p>
+                <button class="rent-button">Rent Now</button>
+            </div>
+            </div>
+
+        <div class="gear-info">
+            <h3>Explore Our Fishing Gear</h3>
+            <p>Whether you're a seasoned fisherman or a curious tourist, we have the perfect equipment for your fishing trip in the beautiful waters of Thrissur, Kerala.</p>
+            <div class="gear-details">
+                <h4>What We Offer:</h4>
+                <ul class="gear-feature-list">
+                    <li>Durable and well-maintained fishing rods</li>
+                    <li>High-performance fishing reels for various fishing styles</li>
+                    <li>Comprehensive tackle boxes with essential fishing accessories</li>
+                    <li>Life jackets for safety</li>
+                    <li>Bait and other fishing essentials (availability may vary)</li>
+                </ul>
+                <p class="availability">All gear is currently available for rent.</p>
+            </div>
+        </div>
+
+        <div class="call-to-action">
+            <p>Ready to cast your line? Browse our gear and book your rental today!</p>
+            <button onclick="window.location.href='va.html'">View Available Gear</button>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2025 Fishify. Rent Fishing Gear in Thrissur, Kerala. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // No specific JavaScript needed for this page in this basic version
+        });
+    </script>
+</body>
+</html>

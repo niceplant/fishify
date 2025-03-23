@@ -1,9 +1,15 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
 import psycopg2
+import os
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend communication
+CORS(app)
+
+# Configure Upload Folder
+UPLOAD_FOLDER = "static/uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 # Database connection
 DB_NAME = "fishify"
@@ -30,7 +36,8 @@ def create_table():
             id SERIAL PRIMARY KEY,
             name TEXT NOT NULL,
             location TEXT NOT NULL,
-            price INT NOT NULL
+            price INT NOT NULL,
+            image_url TEXT
         )
     """)
     conn.commit()
@@ -39,47 +46,68 @@ def create_table():
 
 create_table()
 
-# Route to serve the frontend
+# Serve frontend files
 @app.route('/')
 def home():
     return render_template('index.html')
 
-# Route to fetch all listings
+@app.route('/view-gear')
+def view_gear():
+    return render_template('va.html')
+
+@app.route('/for-renters')
+def for_renters():
+    return render_template('for-renters.html')
+
+@app.route('/become-partner')
+def become_partner():
+    return render_template('b.html')
+
+
+# Fetch all listings
 @app.route('/api/listings', methods=['GET'])
 def get_listings():
     conn = connect_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, location, price FROM listings")
+    cursor.execute("SELECT id, name, location, price, image_url FROM listings")
     listings = cursor.fetchall()
     cursor.close()
     conn.close()
 
-    # Convert to dictionary format
     return jsonify([
-        {"id": row[0], "name": row[1], "location": row[2], "price": row[3]}
+        {"id": row[0], "name": row[1], "location": row[2], "price": row[3], "image_url": row[4]}
         for row in listings
     ])
 
-# Route to add a new listing
+# Handle new listing with image upload
 @app.route('/api/add-listing', methods=['POST'])
 def add_listing():
-    data = request.json
-    name = data.get("name")
-    location = data.get("location")
-    price = data.get("price")
+    name = request.form.get("name")
+    location = request.form.get("location")
+    price = request.form.get("price")
+    image = request.files.get("image")
 
-    if not name or not location or not price:
+    if not name or not location or not price or not image:
         return jsonify({"error": "Missing fields"}), 400
 
+    # Save image
+    image_path = os.path.join(app.config["UPLOAD_FOLDER"], image.filename)
+    image.save(image_path)
+    image_url = f"/{image_path}"
+
+    # Insert into database
     conn = connect_db()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO listings (name, location, price) VALUES (%s, %s, %s)",
-                   (name, location, price))
+    cursor.execute("INSERT INTO listings (name, location, price, image_url) VALUES (%s, %s, %s, %s)",
+                   (name, location, price, image_url))
     conn.commit()
     cursor.close()
     conn.close()
 
-    return jsonify({"message": "Listing added successfully"}), 201
+    return jsonify({"message": "Listing added successfully", "image_url": image_url}), 201
 
-if __name__ == '__main__':
+# Serve uploaded images
+
+
+if __name__ == "__main__":
     app.run(debug=True)

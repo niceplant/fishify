@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Renters | Fishify</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-blue-400 to-cyan-400 text-gray-900 min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-white bg-opacity-10 backdrop-blur-lg rounded-lg p-4 w-full max-w-5xl mx-auto flex justify-between items-center">
+        <a href="{{ url_for('home') }}" class="text-white text-2xl font-bold">Fishify</a>
+        <ul class="flex space-x-6">
+            <li><a href="{{ url_for('home') }}" class="text-white hover:underline">Home</a></li>
+            <li><a href="{{ url_for('view_gear') }}" class="text-white hover:underline">View Gear</a></li>
+            <li><a href="{{ url_for('for_renters') }}" class="text-white hover:underline">For Renters</a></li>
+            <li><a href="{{ url_for('become_partner') }}" class="text-white hover:underline">Become a Partner</a></li>
+        </ul>
+    </nav>
+    
+
+    <!-- Main Content (Pushes footer down) -->
+    <main class="flex-grow flex flex-col items-center p-6">
+
+        <!-- Listing Form -->
+        <section class="bg-white/30 backdrop-blur-md rounded-xl shadow-lg text-center p-6 w-full max-w-2xl mt-6">
+            <h2 class="text-2xl font-semibold text-white mb-4">List Your Fishing Gear</h2>
+            <form id="listing-form" enctype="multipart/form-data" class="space-y-3">
+                <input type="text" id="gear-name" name="name" placeholder="Gear Name" required class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                <input type="text" id="location" name="location" placeholder="Location" required class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                <input type="number" id="price" name="price" placeholder="Price per Day (₹)" required class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                <input type="file" id="image" name="image" accept="image/*" required class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Submit</button>
+            </form>
+        </section>
+
+        <!-- Available Gear Listings -->
+        <section class="w-full max-w-5xl mt-6">
+            <h2 class="text-2xl font-semibold text-white text-center mb-4">Available Gear</h2>
+            <div id="gear-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+        </section>
+
+    </main>
+
+    <!-- Footer (Always at bottom) -->
+    <footer class="text-center text-white py-6 bg-white bg-opacity-10 w-full">
+        <p>&copy; 2025 Fishify. Rent Fishing Gear in Thrissur. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById("listing-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let formData = new FormData(this);
+
+            fetch("/api/add-listing", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("Listing Added!");
+                loadGearListings();
+            })
+            .catch(error => console.error("Error:", error));
+        });
+
+        function loadGearListings() {
+            fetch("/api/listings")
+                .then(response => response.json())
+                .then(data => {
+                    let gearList = document.getElementById("gear-list");
+                    gearList.innerHTML = "";
+                    data.forEach(gear => {
+                        let item = document.createElement("div");
+                        item.className = "bg-white p-4 rounded-lg shadow-md text-center";
+                        item.innerHTML = `
+                            <img src="${gear.image_url}" alt="${gear.name}" class="w-full h-40 object-cover rounded-md">
+                            <h3 class="text-lg font-semibold mt-2">${gear.name}</h3>
+                            <p class="text-gray-700">Location: ${gear.location}</p>
+                            <p class="text-blue-600 font-semibold">₹${gear.price}/day</p>
+                        `;
+                        gearList.appendChild(item);
+                    });
+                })
+                .catch(error => console.error("Error loading gear:", error));
+        }
+
+        loadGearListings();
+    </script>
+
+</body>
+</html>

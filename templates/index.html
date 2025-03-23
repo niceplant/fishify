@@ -3,152 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fishify - Fishing Gear Rental</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            background-color: #f4f4f4;
-            text-align: center;
-        }
-        header {
-            background: #0077b6;
-            color: white;
-            padding: 20px;
-            font-size: 1.5rem;
-        }
-        nav a {
-            margin: 0 15px;
-            text-decoration: none;
-            color: white;
-            font-size: 1rem;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-        }
-        input, button {
-            padding: 10px;
-            margin: 10px 0;
-            width: 100%;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            background: #0077b6;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #005f8a;
-        }
-        .listing {
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 10px 0;
-            background: #f9f9f9;
-        }
-    </style>
+    <title>Fishify - Rent Fishing Gear in Thrissur</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <header>
-        Fishify - Fishing Gear Rental
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#listings">Listings</a>
-            <a href="#add-listing">Add Listing</a>
-        </nav>
-    </header>
-
-    <section id="home" class="container">
-        <h2>Find Fishing Gear for Rent</h2>
-        <input type="text" id="search" placeholder="Search for gear...">
-        <button onclick="searchListings()">Search</button>
-    </section>
-
-    <section id="listings" class="container">
-        <h2>Available Listings</h2>
-        <div id="listings-container"></div>
-    </section>
-
-    <section id="add-listing" class="container">
-        <h2>List Your Fishing Gear</h2>
-        <input type="text" id="gear-name" placeholder="Gear Name">
-        <input type="text" id="location" placeholder="Location">
-        <input type="number" id="price" placeholder="Price per Day (₹)">
-        <button onclick="addListing()">Submit</button>
-    </section>
-
-    <script>
-        let listings = [
-            { name: "Fishing Rod - Shimano", location: "Kerala", price: 200 },
-            { name: "Fishing Reel - Daiwa", location: "Bangalore", price: 150 }
-        ];
-
-        function displayListings() {
-            let container = document.getElementById("listings-container");
-            container.innerHTML = "";
-            listings.forEach((listing, index) => {
-                container.innerHTML += `
-                    <div class="listing">
-                        <h3>${listing.name}</h3>
-                        <p>Location: ${listing.location}</p>
-                        <p>Price: ₹${listing.price}/day</p>
-                        <button onclick="rent(${index})">Rent Now</button>
-                    </div>`;
-            });
-        }
-
-        function addListing() {
-            let name = document.getElementById("gear-name").value;
-            let location = document.getElementById("location").value;
-            let price = document.getElementById("price").value;
-
-            if (name && location && price) {
-                listings.push({ name, location, price });
-                displayListings();
-                alert("Listing added successfully!");
-            } else {
-                alert("Please fill all fields!");
-            }
-        }
-
-        function searchListings() {
-            let query = document.getElementById("search").value.toLowerCase();
-            let filteredListings = listings.filter(l => l.name.toLowerCase().includes(query));
-            let container = document.getElementById("listings-container");
-            container.innerHTML = "";
-            
-            if (filteredListings.length > 0) {
-                filteredListings.forEach((listing, index) => {
-                    container.innerHTML += `
-                        <div class="listing">
-                            <h3>${listing.name}</h3>
-                            <p>Location: ${listing.location}</p>
-                            <p>Price: ₹${listing.price}/day</p>
-                            <button onclick="rent(${index})">Rent Now</button>
-                        </div>`;
-                });
-            } else {
-                container.innerHTML = "<p>No listings found.</p>";
-            }
-        }
-
-        function rent(index) {
-            alert(`You have rented: ${listings[index].name}`);
-        }
-
-        displayListings();
-    </script>
+<body class="bg-gradient-to-r from-blue-400 to-cyan-400 text-gray-800 flex flex-col items-center min-h-screen">
+    
+    <!-- Navigation -->
+    <nav class="bg-white bg-opacity-10 backdrop-blur-lg rounded-lg p-4 w-full max-w-5xl mx-auto flex justify-between items-center">
+        <a href="{{ url_for('home') }}" class="text-white text-2xl font-bold">Fishify</a>
+        <ul class="flex space-x-6">
+            <li><a href="{{ url_for('home') }}" class="text-white hover:underline">Home</a></li>
+            <li><a href="{{ url_for('view_gear') }}" class="text-white hover:underline">View Gear</a></li>
+            <li><a href="{{ url_for('for_renters') }}" class="text-white hover:underline">For Renters</a></li>
+            <li><a href="{{ url_for('become_partner') }}" class="text-white hover:underline">Become a Partner</a></li>
+        </ul>
+    </nav>
+    
+    
+    <!-- Hero Section -->
+    <div class="text-center text-white mt-12 w-11/12 max-w-4xl">
+        <h1 class="text-5xl font-bold drop-shadow-lg">Your Fishing Adventure Starts Here in Thrissur!</h1>
+        <p class="mt-4 text-lg">Rent high-quality fishing gear and explore the beautiful waters of God's Own Country.</p>
+        <button onclick="window.location.href='va.html'" class="mt-6 bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-full shadow-lg text-white text-lg">Rent Now</button>
+    </div>
+    
+    <!-- Features -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 w-11/12 max-w-5xl mt-12 text-center">
+        <div class="bg-white bg-opacity-80 p-6 rounded-lg shadow">
+            <h3 class="text-xl font-semibold">Wide Selection</h3>
+            <p>Choose from a variety of fishing rods, reels, tackle, and more.</p>
+        </div>
+        <div class="bg-white bg-opacity-80 p-6 rounded-lg shadow">
+            <h3 class="text-xl font-semibold">Local Convenience</h3>
+            <p>Convenient pickup and drop-off options in Thrissur.</p>
+        </div>
+        <div class="bg-white bg-opacity-80 p-6 rounded-lg shadow">
+            <h3 class="text-xl font-semibold">Affordable Prices</h3>
+            <p>Enjoy competitive daily and weekly rental rates.</p>
+        </div>
+        <div class="bg-white bg-opacity-80 p-6 rounded-lg shadow">
+            <h3 class="text-xl font-semibold">Easy Booking</h3>
+            <p>Simple and user-friendly online booking process.</p>
+        </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="text-center bg-white bg-opacity-10 p-6 rounded-lg w-11/12 max-w-5xl mt-12 text-white">
+        <h2 class="text-3xl font-bold">Ready to Cast Your Line?</h2>
+        <p class="mt-2">Find the perfect fishing gear for your next adventure.</p>
+        <button onclick="window.location.href='va.html'" class="mt-4 bg-pink-500 hover:bg-pink-600 px-6 py-3 rounded-full shadow-lg text-white text-lg">View Gear</button>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="text-center text-white py-6 w-full mt-3 bg-white bg-opacity-10">
+        <p>&copy; 2025 Fishify. Rent Fishing Gear in Thrissur. All rights reserved.</p>
+    </footer>
+    
 </body>
 </html>
